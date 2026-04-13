@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Service Details - Verdant Sprouts</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="icon" type="image/jpeg" href="images\images (2).webp">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    
+    <style>
+        /* === RESET & CORE === */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; overflow-x: hidden; }
+        
+        body { 
+            font-family: 'Inter', sans-serif; 
+            background-color: var(--bg-color); 
+            color: var(--text-main); 
+            transition: background-color 0.3s, color 0.3s;
+            overflow-x: hidden;
+        }
+
+        /* === THEME VARIABLES (Fresh Microgreens: Crisp White & Greens) === */
+        :root {
+            --bg-color: #FFFFFF;
+            --bg-secondary: #F8FAFC; 
+            --bg-card: #FFFFFF; 
+            --text-main: #0F172A;
+            --text-muted: #64748B;
+            --accent-color: #16A34A; /* Vibrant Green */
+            --accent-dark: #15803D; 
+            --border-color: #E2E8F0;
+            --nav-bg: rgba(255, 255, 255, 0.85);
+            --drawer-bg: #FFFFFF;
+            --drawer-text: #0F172A;
+            --menu-hover-bg: #F0FDF4; 
+        }
+
+        /* DARK MODE */
+        body.dark-mode {
+            --bg-color: #0B1120; 
+            --bg-secondary: #0F172A; 
+            --bg-card: #1E293B; 
+            --text-main: #F8FAFC; 
+            --text-muted: #94A3B8;
+            --accent-color: #22C55E; /* Bright Green */
+            --accent-dark: #16A34A; 
+            --border-color: #1E293B;
+            --nav-bg: rgba(11, 17, 32, 0.85);
+            --drawer-bg: #0F172A;
+            --drawer-text: #F8FAFC;
+            --menu-hover-bg: rgba(34, 197, 94, 0.15); 
+        }
+
+        /* RTL SUPPORT */
+        [dir="rtl"] { text-align: right; }
+        [dir="rtl"] .ml-auto { margin-right: auto; margin-left: 0; }
+        [dir="rtl"] .mr-auto { margin-left: auto; margin-right: 0; }
+        [dir="rtl"] .pl-4 { padding-right: 1rem; padding-left: 0; }
+        [dir="rtl"] .fa-arrow-right { transform: rotate(180deg); }
+        [dir="rtl"] .side-drawer { right: auto; left: 0; transform: translateX(-100%); border-left: none; border-right: 1px solid var(--border-color); }
+
+        /* === ANIMATIONS & UTILITIES === */
+        @keyframes subtleZoom {
+            0% { transform: scale(1); }
+            100% { transform: scale(1.1); }
+        }
+        .animate-zoom {
+            animation: subtleZoom 25s infinite alternate ease-in-out;
+        }
+
+        /* === REDESIGNED SLEEK EDGE-TO-EDGE NAVBAR === */
+        .navbar { 
+            position: fixed; top: 0; left: 0; width: 100%; z-index: 1000;
+            background: var(--nav-bg); 
+            backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border-color); 
+            transition: all 0.3s ease;
+        }
+
+        /* Nav link styling: Soft background pill hover effect */
+        .nav-link { 
+            position: relative;
+            padding: 8px 16px; 
+            color: var(--text-main); 
+            text-decoration: none; 
+            font-size: 13px; 
+            font-weight: 600; 
+            text-transform: uppercase;
+            letter-spacing: 0.5px; 
+            transition: all 0.3s ease; 
+            display: inline-flex; align-items: center; gap: 4px; cursor: pointer; 
+            white-space: nowrap;
+            border-radius: 9999px;
+        }
+        
+        .nav-link:hover { 
+            color: var(--accent-color); 
+            background-color: var(--menu-hover-bg);
+        }
+        
+        .nav-link.active { 
+            color: #FFFFFF; 
+            background-color: var(--accent-color);
+            box-shadow: 0 2px 8px rgba(22, 163, 74, 0.3);
+        }
+        
+        /* Dropdown Restyled */
+        .dropdown { position: relative; display: flex; align-items: center; height: 100%; }
+        .dropdown-menu { 
+            position: absolute; top: 100%; left: 0; transform: translateY(10px); 
+            opacity: 0; visibility: hidden; transition: all 0.3s ease; z-index: 100; 
+        }
+        .dropdown-inner { 
+            background: var(--bg-card); 
+            border: 1px solid var(--border-color); 
+            border-radius: 8px; 
+            min-width: 200px; 
+            box-shadow: 0 10px 40px -10px rgba(0,0,0,0.1); 
+            padding: 8px 0; 
+            display: flex; flex-direction: column;
+        }
+        .dropdown:hover .dropdown-menu { opacity: 1; visibility: visible; transform: translateY(0); }
+        
+        .dropdown-item { 
+            display: block; padding: 10px 20px; 
+            color: var(--text-main); text-decoration: none; font-size: 13px; font-weight: 500; 
+            transition: all 0.2s; text-align: left; white-space: nowrap;
+        }
+        .dropdown-item:hover { 
+            background: var(--menu-hover-bg); color: var(--accent-color); padding-left: 24px;
+        }
+        [dir="rtl"] .dropdown-item:hover { padding-left: 20px; padding-right: 24px; }
+
+        /* PILL TOGGLES */
+        .theme-toggle-pill { width: 44px; height: 22px; background: var(--bg-secondary); border-radius: 20px; position: relative; cursor: pointer; display: flex; align-items: center; justify-content: space-between; padding: 0 6px; border: 1px solid var(--border-color); }
+        .theme-toggle-pill i { font-size: 9px; z-index: 1; }
+        .theme-toggle-pill .fa-sun { color: var(--accent-color); }
+        .theme-toggle-pill .fa-moon { color: #999; }
+        .theme-toggle-pill .thumb { position: absolute; top: 1px; left: 1px; width: 18px; height: 18px; background: var(--bg-card); border-radius: 50%; transition: transform 0.3s cubic-bezier(0.4, 0.0, 0.2, 1); box-shadow: 0 1px 3px rgba(0,0,0,0.1); border: 1px solid var(--border-color); z-index: 2; }
+        body.dark-mode .theme-toggle-pill .thumb { transform: translateX(22px); }
+
+        /* BUTTONS */
+        .btn { padding: 8px 20px; font-weight: 600; font-size: 12px; text-transform: uppercase; letter-spacing: 1px; transition: all 0.3s; display: inline-flex; align-items: center; justify-content: center; cursor: pointer; border-radius: 6px; white-space: nowrap;} 
+        .btn-solid { background: var(--accent-color); color: #FFFFFF !important; border: 1px solid var(--accent-color); }
+        .btn-solid:hover { background: var(--accent-dark); border-color: var(--accent-dark); box-shadow: 0 4px 12px rgba(22, 163, 74, 0.25); }
+        .btn-outline { border: 1px solid var(--border-color); color: var(--text-main); background: var(--bg-card); }
+        .btn-outline:hover { border-color: var(--accent-color); color: var(--accent-color); }
+
+        /* === SIDE-DRAWER MENU === */
+        .side-drawer { 
+            position: fixed; top: 0; right: 0; bottom: 0; width: 100%; max-width: 400px;
+            background: var(--drawer-bg); border-left: 1px solid var(--border-color);
+            z-index: 1001; display: flex; flex-direction: column; color: var(--drawer-text); 
+            opacity: 0; visibility: hidden; transform: translateX(100%); 
+            transition: all 0.4s cubic-bezier(0.77, 0, 0.175, 1); box-shadow: -15px 0 40px rgba(0,0,0,0.1);
+        }
+        .side-drawer.active { opacity: 1; visibility: visible; transform: translateX(0); }
+        [dir="rtl"] .side-drawer.active { transform: translateX(0); }
+
+        .drawer-overlay {
+            position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 1000;
+            opacity: 0; visibility: hidden; transition: all 0.3s ease; backdrop-filter: blur(3px);
+        }
+        .drawer-overlay.active { opacity: 1; visibility: visible; }
+        
+        .mobile-link { 
+            display: block; width: 100%; padding: 16px 0;
+            font-size: 1rem; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; 
+            color: var(--text-main); text-decoration: none; transition: all 0.3s; 
+            border-bottom: 1px solid var(--border-color);
+        }
+        .mobile-link:hover { color: var(--accent-color); padding-left: 10px; }
+        [dir="rtl"] .mobile-link:hover { padding-left: 0; padding-right: 10px; }
+
+        /* FOOTER */
+        footer { background: var(--bg-secondary); border-top: 1px solid var(--border-color); padding-top: 80px; }
+        footer h4 { color: var(--text-main); font-weight: 800; font-size: 1.1rem; margin-bottom: 24px; text-transform: uppercase; letter-spacing: 1px;} 
+        footer a, footer li, footer span { color: var(--text-muted); text-decoration: none; transition: all 0.3s; font-size: 0.95rem; }
+        footer a:hover { color: var(--accent-color); }
+        .social-link-circle { width: 40px; height: 40px; border-radius: 50%; border: 1px solid var(--border-color); display: flex; align-items: center; justify-content: center; transition: all 0.3s; color: var(--text-main); background: var(--bg-card); }
+        .social-link-circle:hover { background: var(--accent-color); color: #FFFFFF; border-color: var(--accent-color); transform: translateY(-3px); }
+        .footer-bottom { border-top: 1px solid var(--border-color); padding: 24px 0; margin-top: 60px; }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="w-full flex items-center justify-between px-6 lg:px-12 h-[72px]">
+            
+            <div class="flex items-center shrink-0">
+                <a href="index.html" class="flex items-center text-2xl lg:text-3xl font-black tracking-tighter" style="color: var(--accent-color); text-decoration: none;">
+                    VerdantSprouts
+                </a>
+            </div>
+            
+            <div class="hidden xl:flex items-center justify-center gap-2 2xl:gap-4 flex-1 px-8">
+                <div class="dropdown h-full flex items-center">
+                    <div class="nav-link">Home <i class="fas fa-chevron-down text-[9px] opacity-70"></i></div>
+                    <div class="dropdown-menu">
+                        <div class="dropdown-inner">
+                            <a href="index.html" class="dropdown-item">Home Page 1</a>
+                            <a href="home-2.html" class="dropdown-item">Home Page 2</a>
+                        </div>
+                    </div>
+                </div>
+                <a href="about.html" class="nav-link">About</a>
+                <a href="services.html" class="nav-link active">Services</a>
+                <a href="pricing.html" class="nav-link">Pricing</a>
+                <a href="blog.html" class="nav-link">Blog</a>
+                <a href="faq.html" class="nav-link">FAQ</a>
+                <a href="contact.html" class="nav-link">Contact</a>
+                <div class="dropdown h-full flex items-center">
+                    <div class="nav-link">Dashboard <i class="fas fa-chevron-down text-[9px] opacity-70"></i></div>
+                    <div class="dropdown-menu">
+                        <div class="dropdown-inner">
+                            <a href="user.html" class="dropdown-item">User Dashboard</a>
+                            <a href="admin.html" class="dropdown-item">Admin Dashboard</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="hidden xl:flex items-center justify-end shrink-0 gap-4">
+                <div class="flex items-center gap-3">
+                    <a href="login.html" class="btn btn-outline">Login</a>
+                    <a href="register.html" class="btn btn-solid">Register</a> 
+                </div>
+                
+                <div class="w-[1px] h-6 bg-[var(--border-color)] mx-2"></div>
+                
+                <div class="flex items-center gap-3">
+                    <button id="rtl-btn" class="text-[10px] font-bold text-[var(--text-muted)] hover:text-[var(--text-main)] transition-colors uppercase tracking-widest bg-transparent border-none cursor-pointer">RTL</button>
+                    <div id="theme-toggle-desktop" class="theme-toggle-pill" title="Toggle Dark Mode">
+                        <i class="fas fa-sun"></i><i class="fas fa-moon"></i><div class="thumb"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="xl:hidden flex items-center justify-end shrink-0">
+                <button id="mobile-btn" class="w-10 h-10 rounded bg-[var(--bg-card)] border border-[var(--border-color)] flex items-center justify-center text-[var(--text-main)] hover:text-[var(--accent-color)] hover:border-[var(--accent-color)] transition-all cursor-pointer">
+                    <i class="fas fa-bars text-lg"></i>
+                </button>
+            </div>
+
+        </div>
+    </nav>
+
+    <div class="drawer-overlay" id="drawer-overlay"></div>
+
+    <div class="side-drawer" id="fullscreen-menu">
+        <div class="w-full px-8 py-6 flex justify-between items-center border-b border-[var(--border-color)] shrink-0">
+            <a href="index.html" class="flex items-center text-2xl lg:text-3xl font-black tracking-tighter" style="color: var(--accent-color); text-decoration: none;">
+                VerdantSprouts
+            </a>
+            <button id="close-menu" class="w-8 h-8 rounded bg-[var(--bg-secondary)] border border-[var(--border-color)] flex items-center justify-center text-[var(--text-muted)] hover:text-[var(--accent-color)] transition-all text-sm cursor-pointer">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+
+        <div class="flex flex-col items-start justify-start px-8 py-6 w-full overflow-y-auto flex-1">
+            <a href="index.html" class="mobile-link" style="border-top: 1px solid var(--border-color);">Home Page 1</a>
+            <a href="home-2.html" class="mobile-link">Home Page 2</a>
+            <a href="about.html" class="mobile-link">About</a>
+            <a href="services.html" class="mobile-link" style="color: var(--accent-color);">Services</a>
+            <a href="pricing.html" class="mobile-link">Pricing</a>
+            <a href="blog.html" class="mobile-link">Blog</a>
+            <a href="faq.html" class="mobile-link">FAQ</a>
+            <a href="contact.html" class="mobile-link">Contact</a>
+            <a href="user.html" class="mobile-link">User Dashboard</a>
+            <a href="admin.html" class="mobile-link">Admin Dashboard</a>
+        </div>
+
+        <div class="w-full px-8 py-6 bg-[var(--bg-secondary)] border-t border-[var(--border-color)] flex flex-col gap-5 shrink-0">
+            <div class="flex justify-between items-center w-full">
+                <div class="flex items-center gap-3">
+                    <span class="text-[var(--text-muted)] font-bold text-[10px] uppercase tracking-widest">Theme:</span>
+                    <div id="theme-toggle-mobile" class="theme-toggle-pill"><i class="fas fa-sun"></i><i class="fas fa-moon"></i><div class="thumb"></div></div>
+                </div>
+                <div class="flex items-center gap-3">
+                    <button id="rtl-toggle-mobile" class="text-[10px] font-bold text-[var(--text-main)] border border-[var(--border-color)] px-2 py-1 hover:border-[var(--accent-color)] hover:text-[var(--accent-color)] bg-[var(--bg-card)] rounded cursor-pointer transition-colors">LTR/RTL</button>
+                </div>
+            </div>
+            
+            <div class="flex flex-col gap-3 w-full">
+                <a href="login.html" class="btn btn-outline w-full !py-3">Client Login</a>
+                <a href="register.html" class="btn btn-solid w-full !py-3">Register Now</a>
+            </div>
+        </div>
+    </div>
+
+    <section class="relative w-full min-h-screen pt-28 pb-16 overflow-hidden flex flex-col items-center justify-center">
+        <div class="absolute inset-0 z-0 bg-black">
+            <img src="images/pexels-valeriya-30270633.jpg" alt="Service Details Overview" class="w-full h-full object-cover object-center animate-zoom opacity-75" />
+            <div class="absolute inset-0 bg-gradient-to-b from-gray-900/80 via-gray-900/60 to-gray-900/90"></div>
+        </div>
+
+        <div class="relative z-10 w-full max-w-4xl mx-auto px-6 sm:px-12 flex flex-col items-center justify-center text-center shrink-0">
+            <div class="flex items-center justify-center gap-4 mb-6">
+                <div class="w-8 h-[2px] bg-[var(--accent-color)] hidden sm:block"></div>
+                <span class="text-xs font-bold tracking-[0.2em] uppercase text-green-100 shrink-0">In-Depth Overview</span>
+                <div class="w-8 h-[2px] bg-[var(--accent-color)] hidden sm:block"></div>
+            </div>
+            
+            <h1 class="text-5xl sm:text-6xl md:text-7xl font-black leading-[1.05] sm:leading-[0.95] mb-6 sm:mb-8 text-white tracking-tighter shrink-0">
+                Service Details, <br>
+                <span class="text-[var(--accent-color)]">Tailored Precision.</span>
+            </h1>
+            
+            <p class="text-white/80 text-base sm:text-lg md:text-xl leading-relaxed max-w-2xl mx-auto font-light mb-8 sm:mb-10 shrink-0">
+                Explore the comprehensive features, methodologies, and customized solutions provided in this offering. We ensure the highest standard of quality and transparency at every step.
+            </p>
+
+            <div class="flex flex-col sm:flex-row gap-4 w-full sm:w-auto justify-center shrink-0">
+                <a href="#details-content" class="btn btn-solid w-full sm:w-auto group !py-4 !px-10 !text-xs relative overflow-hidden flex justify-center items-center gap-3 shrink-0 rounded-md">
+                    <span class="relative z-10 shrink-0">Read More</span>
+                    <i class="fas fa-arrow-down transition-transform group-hover:translate-y-1 relative z-10 shrink-0"></i>
+                </a>
+                <a href="services.html" class="btn border border-white/30 text-white hover:bg-white hover:text-black w-full sm:w-auto !py-4 !px-10 !text-xs backdrop-blur-sm transition-all flex justify-center items-center shrink-0 rounded-md">
+                    <span class="relative z-10 shrink-0">Back to Services</span>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <section id="details-content" class="w-full py-24 bg-[var(--bg-color)] border-b border-[var(--border-color)]">
+        <div class="max-w-4xl mx-auto px-6 text-center">
+            <div class="w-16 h-16 mx-auto bg-green-50 dark:bg-green-900/20 text-[var(--accent-color)] rounded-full flex items-center justify-center text-2xl mb-8">
+                <i class="fas fa-flask"></i>
+            </div>
+            <h2 class="text-sm font-bold tracking-widest text-[var(--accent-color)] uppercase mb-4">Core Methodology</h2>
+            <h3 class="text-3xl md:text-5xl font-black text-[var(--text-main)] mb-10 tracking-tight">The Science of Living Superfoods.</h3>
+            
+            <p class="text-[var(--text-muted)] text-lg leading-loose mb-8">
+                At Verdant Sprouts, our service begins long before a seed is ever planted. We meticulously analyze the nutrient profiles required by our clients—ranging from high-end culinary artists to everyday health enthusiasts. By controlling the exact parameters of light spectrum, water pH, and atmospheric humidity, we ensure that every single tray of microgreens is mathematically optimized to produce the highest possible yield of vital enzymes and vitamins. Microgreens, harvested at the cotyledon stage, contain up to forty times higher concentrations of crucial nutrients compared to their mature counterparts, making this precision farming absolutely essential.
+            </p>
+            
+            <div class="w-24 h-1 bg-[var(--border-color)] mx-auto my-10 rounded-full"></div>
+            
+            <p class="text-[var(--text-muted)] text-lg leading-loose mb-8">
+                Our hydroponic systems are completely soil-free, utilizing a sterilized coconut coir medium. This eliminates the risk of soil-borne pathogens, ensuring an incredibly clean and safe product. Furthermore, the water used in our closed-loop irrigation system is continuously filtered and recirculated, reducing our overall water consumption by up to ninety percent compared to traditional soil farming. This scientific approach not only creates a more robust, flavorful garnish but also ensures that the service we provide is rooted deeply in environmental responsibility and technological innovation.
+            </p>
+            
+            <p class="text-[var(--text-muted)] text-lg leading-loose">
+                Every delivery we make comes with a guarantee of freshness. The lifecycle from the cutting table to your front door or restaurant kitchen is often less than twelve hours. We believe that to truly provide an exceptional service, the chain of custody must be short, transparent, and strictly monitored. This scientific dedication to the craft is what elevates our greens from a simple ingredient to a foundational pillar of health and culinary excellence.
+            </p>
+        </div>
+    </section>
+
+    <section class="w-full py-24 bg-[var(--bg-secondary)] border-b border-[var(--border-color)]">
+        <div class="max-w-4xl mx-auto px-6 text-center">
+            <div class="w-16 h-16 mx-auto bg-green-50 dark:bg-green-900/20 text-[var(--accent-color)] rounded-full flex items-center justify-center text-2xl mb-8">
+                <i class="fas fa-handshake"></i>
+            </div>
+            <h2 class="text-sm font-bold tracking-widest text-[var(--accent-color)] uppercase mb-4">Bespoke Solutions</h2>
+            <h3 class="text-3xl md:text-5xl font-black text-[var(--text-main)] mb-10 tracking-tight">Tailored Culinary Integration.</h3>
+            
+            <p class="text-[var(--text-muted)] text-lg leading-loose mb-8">
+                Understanding that every kitchen operates with its own unique rhythm and flavor profile, our wholesale and subscription services are entirely customizable. When you partner with us, you are not just ordering off a static menu. Our agricultural team sits down with executive chefs and home cooks alike to conduct seasonal crop planning. Do you need the sharp, peppery bite of purple radish to cut through a rich seafood dish? Or perhaps the sweet, delicate tendrils of pea shoots to garnish a spring salad? We map out exactly what you need, down to the gram, and adjust our seeding schedules to match your demand perfectly.
+            </p>
+            
+            <div class="w-24 h-1 bg-[var(--border-color)] mx-auto my-10 rounded-full"></div>
+            
+            <p class="text-[var(--text-muted)] text-lg leading-loose mb-8">
+                Consistency is the hallmark of a professional kitchen, and it is the core promise of our service. By moving our farming indoors, we have eliminated the unpredictability of weather, seasons, and pests. This means that the basil microgreens you order in the dead of winter will look, taste, and cost exactly the same as the ones you order at the height of summer. Our logistics team handles all deliveries through a fleet of climate-controlled vehicles, guaranteeing that the cold chain is never broken and shelf life is maximized.
+            </p>
+            
+            <p class="text-[var(--text-muted)] text-lg leading-loose">
+                For our residential subscribers, this level of professional customization is passed directly to your home. You have full control over your weekly boxes via our online portal, allowing you to swap varieties, pause deliveries for vacations, or increase quantities when hosting guests. It is a seamless, frictionless service designed to make integrating hyper-local superfoods into your daily routine as effortless as possible.
+            </p>
+        </div>
+    </section>
+
+    <section class="w-full py-24 bg-[var(--bg-color)]">
+        <div class="max-w-4xl mx-auto px-6 text-center">
+            <div class="w-16 h-16 mx-auto bg-green-50 dark:bg-green-900/20 text-[var(--accent-color)] rounded-full flex items-center justify-center text-2xl mb-8">
+                <i class="fas fa-globe-americas"></i>
+            </div>
+            <h2 class="text-sm font-bold tracking-widest text-[var(--accent-color)] uppercase mb-4">Ecological Footprint</h2>
+            <h3 class="text-3xl md:text-5xl font-black text-[var(--text-main)] mb-10 tracking-tight">Our Commitment to the Earth.</h3>
+            
+            <p class="text-[var(--text-muted)] text-lg leading-loose mb-8">
+                Providing an incredible product is only half of our mission; the other half is ensuring that our service actively heals rather than harms the environment. Traditional agriculture is currently facing unprecedented challenges regarding water scarcity, soil degradation, and massive carbon footprints associated with cross-country transportation. Our vertical farming model was explicitly designed to combat these issues head-on. By growing vertically, we maximize our yield per square foot, producing hundreds of times more food than a conventional farm of the same size, all within the city limits where the food will actually be consumed.
+            </p>
+            
+            <div class="w-24 h-1 bg-[var(--border-color)] mx-auto my-10 rounded-full"></div>
+            
+            <p class="text-[var(--text-muted)] text-lg leading-loose mb-8">
+                Every aspect of our service packaging has been scrutinized for its ecological impact. We categorically refuse to use single-use plastics. Instead, all our microgreens are delivered in containers made from PLA (Polylactic Acid), a bioplastic derived from renewable resources like corn starch. These containers are 100% commercially compostable, ensuring that the packaging returns to the earth just as safely as the plants it holds. Furthermore, our spent growing medium and the root mats of the harvested greens are routinely donated to local community gardens to enrich their soil, creating a beautiful, zero-waste lifecycle.
+            </p>
+            
+            <p class="text-[var(--text-muted)] text-lg leading-loose mb-12">
+                Ultimately, our service is about community impact. We regularly host educational workshops at our facility, teaching local schools and neighborhood groups about the future of sustainable agriculture and the importance of nutritional sovereignty. When you subscribe to our service or feature our greens on your menu, you are actively participating in a localized, sustainable food economy that prioritizes planetary health just as highly as human health. We are deeply proud to be your local farmers.
+            </p>
+
+            <a href="pricing.html" class="btn btn-solid !py-4 !px-12 text-sm rounded-full shadow-xl shadow-[var(--accent-color)]/20 hover:-translate-y-1 transition-transform">
+                View Pricing & Plans
+            </a>
+        </div>
+    </section>
+
+    <footer>
+        <div class="w-full px-6 lg:px-12">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 mb-10 pt-4">
+                <div class="lg:col-span-4">
+                    <a href="index.html" class="flex items-center text-2xl lg:text-3xl font-black tracking-tighter mb-6" style="color: var(--accent-color); text-decoration: none;">
+                        VerdantSprouts
+                    </a>
+                    <p class="opacity-80 leading-relaxed text-sm mb-6 max-w-sm" style="color: var(--text-muted);">
+                        Cultivating health from seed to harvest. We provide hyper-local, nutrient-packed microgreens and sprouts to health-conscious individuals and elite culinary professionals.
+                    </p>
+                    <div class="flex space-x-3">
+                        <a href="#" class="social-link-circle"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="social-link-circle"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" class="social-link-circle"><i class="fab fa-twitter"></i></a>
+                    </div>
+                </div>
+                
+                <div class="lg:col-span-8">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
+                        <div>
+                            <h4>Explore Farm</h4>
+                            <ul class="space-y-3">
+                                <li><a href="about.html">Growing Methods</a></li>
+                                <li><a href="services.html">Nutritional Science</a></li>
+                                <li><a href="index.html">Farm Gallery</a></li>
+                                <li><a href="blog.html">Sustainability Report</a></li>
+                            </ul>
+                        </div>
+                        <div>
+                            <h4>Portal & Store</h4>
+                            <ul class="space-y-3">
+                                <li><a href="pricing.html">Shop Microgreens</a></li>
+                                <li><a href="services.html">Build a Subscription</a></li>
+                                <li><a href="login.html">Manage Account</a></li>
+                                <li><a href="faq.html">Delivery Zones</a></li>
+                            </ul>
+                        </div>
+                        <div class="sm:col-span-2 md:col-span-1">
+                            <h4>Get in Touch</h4>
+                            <ul class="space-y-3 text-[var(--text-muted)] text-sm">
+                                <li class="flex items-start"><i class="fas fa-map-marker-alt mt-1 mr-3 shrink-0" style="color: var(--accent-color);"></i><span>42 Organic Way<br>Portland, OR 97204</span></li>
+                                <li class="flex items-center"><i class="fas fa-phone mr-3 shrink-0" style="color: var(--accent-color);"></i><a href="tel:+15551234567" class="break-all">+1 (555) 123-4567</a></li>
+                                <li class="flex items-center"><i class="fas fa-envelope mr-3 shrink-0" style="color: var(--accent-color);"></i><a href="mailto:hello@verdantsprouts.com" class="break-all">hello@verdantsprouts.com</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="footer-bottom flex flex-col md:flex-row justify-between items-center text-sm gap-4">
+                <p style="color: var(--text-muted);">&copy; 2026 Verdant Sprouts Farm. All rights reserved.</p>
+                <div class="flex flex-wrap justify-center gap-4 sm:gap-6">
+                    <a href="#">Food Safety Standards</a>
+                    <a href="#">Terms of Service</a>
+                    <a href="#">Privacy Policy</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        const mobileBtn = document.getElementById('mobile-btn'); 
+        const fullscreenMenu = document.getElementById('fullscreen-menu'); 
+        const closeMenu = document.getElementById('close-menu'); 
+        const drawerOverlay = document.getElementById('drawer-overlay');
+        
+        function toggleMenu() { 
+            fullscreenMenu.classList.toggle('active'); 
+            drawerOverlay.classList.toggle('active');
+            document.body.style.overflow = fullscreenMenu.classList.contains('active') ? 'hidden' : 'auto';
+        }
+        
+        mobileBtn.onclick = toggleMenu; 
+        closeMenu.onclick = toggleMenu; 
+        drawerOverlay.onclick = toggleMenu; 
+        
+        const themeDesktop = document.getElementById('theme-toggle-desktop');
+        const themeMobile = document.getElementById('theme-toggle-mobile'); 
+        const theme = localStorage.getItem('theme') || 'light';
+
+        function updateThemeUI(isDark) {
+            if (isDark) {
+                document.body.classList.add('dark-mode'); 
+                if(themeMobile) themeMobile.classList.add('active');
+            } else {
+                document.body.classList.remove('dark-mode');
+                if(themeMobile) themeMobile.classList.remove('active');
+            }
+        }
+        
+        updateThemeUI(theme === 'dark');
+        
+        function toggleTheme() { 
+            const isDark = !document.body.classList.contains('dark-mode');
+            updateThemeUI(isDark);
+            localStorage.setItem('theme', isDark ? 'dark' : 'light'); 
+        }
+        
+        themeDesktop.onclick = toggleTheme; 
+        if(themeMobile) themeMobile.onclick = toggleTheme;
+        
+        const rtlBtn = document.getElementById('rtl-btn'); 
+        const rtlMobile = document.getElementById('rtl-toggle-mobile'); 
+        const dir = localStorage.getItem('dir') || 'ltr';
+        
+        if (dir === 'rtl') { 
+            document.documentElement.dir = 'rtl'; 
+        }
+        
+        function toggleRTL() { 
+            const isRTL = document.documentElement.dir === 'rtl'; 
+            document.documentElement.dir = isRTL ? 'ltr' : 'rtl'; 
+            localStorage.setItem('dir', isRTL ? 'ltr' : 'rtl'); 
+        }
+        
+        rtlBtn.onclick = toggleRTL; 
+        if(rtlMobile) rtlMobile.onclick = toggleRTL;
+    </script>
+</body>
+</html>

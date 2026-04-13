@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Create Account | Verdant Sprouts</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="icon" type="image/jpeg" href="images\images (2).webp">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    
+    <style>
+        /* =========================================
+           CORE STYLES & VARIABLES
+           ========================================= */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        /* STRICT NO SCROLL LOCK */
+        html, body { 
+            height: 100vh !important; 
+            width: 100vw !important;
+            overflow: hidden !important; 
+            font-family: 'Inter', sans-serif; 
+            margin: 0;
+            padding: 0;
+        }
+
+        /* === Verdant Sprouts THEME VARIABLES (GLASSMORPHISM) === */
+        :root {
+            /* Animated Background Colors */
+            --bg-grad-1: #E0F2FE; 
+            --bg-grad-2: #DCFCE7;
+            --bg-grad-3: #FEF9C3;
+            
+            /* Card & Form (Glass Effect) */
+            --bg-card: rgba(255, 255, 255, 0.65); 
+            --card-border: rgba(255, 255, 255, 0.6);
+            --card-blur: blur(24px);
+            --form-text: #0F172A;
+            --form-muted: #475569;
+            
+            /* Inputs */
+            --input-bg: rgba(255, 255, 255, 0.5);
+            --input-border: rgba(255, 255, 255, 0.8);
+            --input-focus-bg: rgba(255, 255, 255, 0.9);
+            --input-text: #0F172A;
+            --input-icon: #64748B;
+            
+            /* Top Controls */
+            --page-text: #334155; 
+            --toggle-bg: rgba(255, 255, 255, 0.8); 
+            
+            /* Accents & Buttons (Verdant Green Gradient) */
+            --accent-color: #16A34A; 
+            --accent-dark: #15803D; 
+            --btn-gradient: linear-gradient(135deg, #34D399, #059669);
+            --btn-text: #FFFFFF;
+            
+            --radius: 24px;
+            --shadow: 0 30px 60px -15px rgba(0, 0, 0, 0.1);
+        }
+
+        /* DARK MODE */
+        body.dark-mode {
+            --bg-grad-1: #020617; 
+            --bg-grad-2: #064E3B;
+            --bg-grad-3: #0F172A;
+            
+            --bg-card: rgba(15, 23, 42, 0.55); 
+            --card-border: rgba(255, 255, 255, 0.1);
+            --form-text: #F8FAFC;
+            --form-muted: #94A3B8;
+            
+            --input-bg: rgba(0, 0, 0, 0.25);
+            --input-border: rgba(255, 255, 255, 0.12);
+            --input-focus-bg: rgba(0, 0, 0, 0.4);
+            --input-text: #F8FAFC;
+            --input-icon: #94A3B8;
+            
+            --page-text: #E2E8F0; 
+            --toggle-bg: rgba(0, 0, 0, 0.4); 
+            
+            --accent-color: #22C55E; 
+            --accent-dark: #16A34A;
+            --btn-gradient: linear-gradient(135deg, #10B981, #047857);
+
+            --shadow: 0 30px 60px -15px rgba(0, 0, 0, 0.5);
+        }
+
+        body { 
+            background: linear-gradient(120deg, var(--bg-grad-1), var(--bg-grad-2), var(--bg-grad-3));
+            background-size: 300% 300%;
+            animation: moveGradient 15s ease infinite;
+            transition: background 0.5s ease;
+            display: flex;
+            flex-direction: column; 
+            position: relative;
+        }
+
+        @keyframes moveGradient {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* Abstract Soft Orbs */
+        .bg-shape {
+            position: absolute; border-radius: 50%; filter: blur(80px); 
+            z-index: 0; pointer-events: none; opacity: 0.7;
+            animation: float 10s infinite ease-in-out alternate;
+        }
+        .shape1 { top: -10%; left: -10%; width: 50vw; height: 50vw; background: rgba(52, 211, 153, 0.4); }
+        .shape2 { bottom: -20%; right: -10%; width: 60vw; height: 60vw; background: rgba(56, 189, 248, 0.3); animation-delay: -5s; }
+        body.dark-mode .shape1 { background: rgba(16, 185, 129, 0.2); }
+        body.dark-mode .shape2 { background: rgba(2, 132, 199, 0.2); }
+
+        @keyframes float {
+            0% { transform: translateY(0) scale(1); }
+            100% { transform: translateY(30px) scale(1.05); }
+        }
+
+        /* RTL SUPPORT */
+        [dir="rtl"] { text-align: right; }
+        [dir="rtl"] .ml-2 { margin-left: 0; margin-right: 0.5rem; }
+        [dir="rtl"] .mr-3 { margin-left: 0.75rem; margin-right: 0; }
+        [dir="rtl"] .input-icon { left: auto; right: 16px; }
+        [dir="rtl"] .input-field { padding: clamp(8px, 1.5vh, 12px) 44px clamp(8px, 1.5vh, 12px) 16px !important; }
+        [dir="rtl"] .btn-icon { margin-left: 0; margin-right: 8px; transform: rotate(180deg); }
+
+        /* =========================================
+           TOP CONTROLS BAR
+           ========================================= */
+        .top-bar {
+            width: 100%;
+            display: flex;
+            justify-content: flex-end; 
+            align-items: center;
+            padding: 1rem 1.5rem;
+            gap: 1.5rem;
+            z-index: 50;
+            flex-shrink: 0;
+        }
+
+        .toggle { 
+            width: 44px; height: 26px; 
+            background: var(--toggle-bg); 
+            border: 1px solid var(--card-border);
+            border-radius: 20px; position: relative; cursor: pointer; transition: 0.3s; 
+            flex-shrink: 0; backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+        }
+        .toggle::before { 
+            content: ''; position: absolute; width: 20px; height: 20px; 
+            background: white; border-radius: 50%; top: 2px; left: 3px; 
+            transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1); box-shadow: 0 2px 5px rgba(0,0,0,0.2); 
+        }
+        body.dark-mode .toggle::before { left: 19px; background: var(--accent-color); }
+        
+        .top-btn-text { 
+            font-size: 0.7rem; font-weight: 800; color: var(--page-text); 
+            background: var(--bg-card); border: 1px solid var(--card-border); 
+            padding: 8px 14px; border-radius: 8px; cursor: pointer; transition: 0.3s; 
+            text-transform: uppercase; letter-spacing: 1px; 
+            backdrop-filter: var(--card-blur); -webkit-backdrop-filter: var(--card-blur);
+        }
+        .top-btn-text:hover { 
+            background: var(--page-text); color: var(--bg-grad-1); border-color: transparent;
+        }
+
+        /* MAIN WRAPPER */
+        .main-wrapper {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            /* 5vh bottom padding naturally pushes the card slightly upside */
+            padding: 1rem 1rem 5vh 1rem; 
+            z-index: 10;
+        }
+
+        /* LOGIN CARD (GLASS) */
+        .login-card {
+            background-color: var(--bg-card);
+            backdrop-filter: var(--card-blur);
+            -webkit-backdrop-filter: var(--card-blur);
+            border: 1px solid var(--card-border);
+            border-radius: var(--radius);
+            padding: clamp(1.2rem, 3vh, 2rem) clamp(1.5rem, 4vw, 2.5rem);
+            width: 100%;
+            max-width: 420px;
+            box-shadow: var(--shadow);
+            display: flex;
+            flex-direction: column;
+            gap: clamp(8px, 1.8vh, 16px); 
+            position: relative;
+            overflow: hidden !important; 
+            transition: background-color 0.4s ease, border-color 0.4s ease, box-shadow 0.4s ease;
+        }
+
+        /* HEADERS */
+        .auth-logo { display: flex; justify-content: center; margin-bottom: 0px; }
+        .auth-header { text-align: center; }
+        .auth-header h2 { font-size: clamp(1.1rem, 2.2vh, 1.4rem); font-weight: 800; color: var(--form-text); margin-bottom: 2px; letter-spacing: -0.5px; }
+        .auth-header p { font-size: clamp(0.75rem, 1.5vh, 0.8rem); color: var(--form-muted); margin: 0; font-weight: 500; }
+
+        /* FORM */
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: clamp(8px, 1.5vh, 12px); 
+            margin: 0;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: clamp(4px, 0.8vh, 6px);
+        }
+        
+        .form-group label { font-size: clamp(0.7rem, 1.4vh, 0.75rem); font-weight: 600; color: var(--form-text); margin: 0; padding-left: 4px;}
+        
+        .input-wrapper { position: relative; display: flex; align-items: center; }
+        .input-icon { position: absolute; left: 16px; top: 50%; transform: translateY(-50%); color: var(--input-icon); font-size: 0.95rem; transition: color 0.3s; pointer-events: none; }
+        
+        .input-field {
+            width: 100%;
+            padding: clamp(6px, 1.2vh, 10px) 16px clamp(6px, 1.2vh, 10px) 44px;
+            height: clamp(38px, 5vh, 44px);
+            border: 1px solid var(--input-border);
+            background-color: var(--input-bg);
+            color: var(--input-text);
+            border-radius: 12px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            margin: 0;
+        }
+        .input-field::placeholder { color: var(--input-icon); opacity: 0.6; font-weight: 400; }
+        .input-field:focus { 
+            outline: none; 
+            border-color: var(--accent-color); 
+            background-color: var(--input-focus-bg);
+            box-shadow: 0 0 0 4px rgba(22, 163, 74, 0.15);
+        }
+        .input-field:focus + .input-icon, 
+        .input-field:focus ~ .input-icon { 
+            color: var(--accent-color); 
+        }
+
+        /* Password Field Specifics */
+        .password-field { padding-right: 44px !important; }
+        .password-toggle {
+            position: absolute; right: 8px; top: 50%; transform: translateY(-50%);
+            color: var(--input-icon); background: none; border: none; cursor: pointer;
+            padding: 4px 8px; transition: color 0.3s; font-size: 0.9rem; z-index: 5;
+        }
+        .password-toggle:hover, .password-toggle:focus { color: var(--accent-color); outline: none; }
+        [dir="rtl"] .password-field { padding-right: 16px !important; padding-left: 44px !important; }
+        [dir="rtl"] .password-toggle { right: auto; left: 8px; }
+
+        .utility-row {
+            display: flex; align-items: center;
+            margin: 0; padding: 2px 4px;
+        }
+
+        input[type="checkbox"] {
+            width: clamp(14px, 2vh, 16px); 
+            height: clamp(14px, 2vh, 16px); 
+            border-radius: 4px; cursor: pointer;
+            accent-color: var(--accent-color);
+            margin-right: 8px; flex-shrink: 0;
+        }
+        [dir="rtl"] input[type="checkbox"] { margin-right: 0; margin-left: 8px; }
+
+        /* BUTTONS */
+        .auth-btn {
+            width: 100%; 
+            height: clamp(38px, 5vh, 44px);
+            padding: 0;
+            background: var(--btn-gradient);
+            color: var(--btn-text); 
+            border: none; border-radius: 12px;
+            font-size: 0.85rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;
+            cursor: pointer; transition: all 0.3s;
+            margin-top: 2px; box-shadow: 0 4px 15px rgba(22, 163, 74, 0.2);
+            display: flex; align-items: center; justify-content: center;
+        }
+        .auth-btn:hover { 
+            transform: translateY(-2px); 
+            box-shadow: 0 8px 20px rgba(22, 163, 74, 0.4); 
+        }
+
+        /* DIVIDER */
+        .divider { text-align: center; position: relative; margin: 0; }
+        .divider::before { content: ''; position: absolute; left: 0; top: 50%; width: 100%; height: 1px; background: var(--card-border); }
+        .divider span { position: relative; background: var(--bg-card); padding: 4px 16px; border-radius: 20px; color: var(--form-muted); font-size: clamp(0.6rem, 1.2vh, 0.65rem); font-weight: 600; backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px); }
+
+        /* SOCIALS */
+        .social-login { display: flex; justify-content: center; gap: 12px; }
+        .social-btn {
+            flex: 1; height: clamp(36px, 5vh, 42px);
+            border: 1px solid var(--input-border); border-radius: 12px; 
+            background-color: var(--input-bg);
+            font-size: 1.1rem; color: var(--form-text);
+            cursor: pointer; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex; align-items: center; justify-content: center;
+        }
+        .social-btn:hover { 
+            background-color: var(--input-focus-bg);
+            border-color: var(--accent-color);
+            color: var(--accent-color);
+            transform: translateY(-2px);
+        }
+
+        /* FOOTER LINKS */
+        .login-link { text-align: center; font-size: clamp(0.75rem, 1.5vh, 0.8rem); color: var(--form-muted); font-weight: 500; margin-top: 0; }
+        .login-link a { color: var(--accent-color); font-weight: 700; text-decoration: none; transition: all 0.3s; }
+        .login-link a:hover { color: var(--accent-dark); text-decoration: underline; }
+
+        /* =========================================
+           ULTRA-COMPACT MOBILE OPTIMIZATIONS 
+           ========================================= */
+        @media (max-width: 400px), (max-height: 750px) {
+            .top-bar { padding: 0.6rem 1rem; gap: 1rem; }
+            .login-card { padding: 1.2rem 1.5rem !important; gap: 10px !important; width: 95%; border-radius: 20px; }
+            .auth-logo { margin-bottom: 0 !important; }
+            .auth-header h2 { font-size: 1.1rem !important; margin-bottom: 0 !important; }
+            .auth-header p { display: none !important; } 
+            
+            form { gap: 8px !important; }
+            .form-group { gap: 4px !important; }
+            .input-field { padding: 6px 12px 6px 36px !important; font-size: 0.8rem !important; border-radius: 10px; height: 38px !important;}
+            .input-icon { font-size: 0.85rem !important; left: 12px !important; }
+            
+            .password-field { padding-right: 36px !important; }
+            .password-toggle { right: 6px !important; font-size: 0.85rem !important; }
+
+            [dir="rtl"] .input-field { padding: 6px 36px 6px 12px !important; }
+            [dir="rtl"] .input-icon { right: 12px !important; left: auto !important; }
+            [dir="rtl"] .password-field { padding-left: 36px !important; padding-right: 12px !important; }
+            [dir="rtl"] .password-toggle { left: 6px !important; right: auto !important; }
+            
+            .utility-row span { font-size: 0.65rem !important; }
+            
+            .auth-btn { height: 38px !important; font-size: 0.8rem !important; margin-top: 2px !important; border-radius: 10px;}
+            .social-btn { height: 36px !important; font-size: 0.95rem !important; border-radius: 10px;}
+            .login-link { font-size: 0.75rem !important; }
+        }
+
+        @media (max-height: 600px) {
+            .top-bar { padding: 0.4rem 1rem; }
+            .login-card { gap: 6px !important; padding: 1rem 1.2rem !important; border-radius: 16px; }
+            form { gap: 6px !important; }
+            .auth-header p { display: none !important; }
+            .input-field { padding: 4px 10px 4px 32px !important; font-size: 0.75rem !important; border-radius: 8px; height: 34px !important;}
+            .input-icon { left: 10px !important; font-size: 0.75rem !important; }
+            
+            .password-field { padding-right: 28px !important; }
+            .password-toggle { right: 4px !important; font-size: 0.75rem !important; padding: 2px 4px !important; }
+
+            [dir="rtl"] .input-field { padding: 4px 32px 4px 10px !important; }
+            [dir="rtl"] .input-icon { right: 10px !important; left: auto !important; }
+            [dir="rtl"] .password-field { padding-left: 28px !important; padding-right: 10px !important; }
+            [dir="rtl"] .password-toggle { left: 4px !important; right: auto !important; }
+
+            .auth-btn { height: 34px !important; font-size: 0.75rem !important; border-radius: 8px;}
+            .social-btn { height: 32px !important; font-size: 0.85rem !important; border-radius: 8px;}
+        }
+    </style>
+</head>
+<body>
+
+    <div class="bg-shape shape1"></div>
+    <div class="bg-shape shape2"></div>
+
+    <div class="top-bar">
+        <div class="flex items-center gap-2" style="cursor: pointer;" onclick="document.getElementById('theme-toggle').click()">
+            <i class="fas fa-sun text-xs" style="color: var(--page-text); transition: color 0.3s;"></i>
+            <div class="toggle" id="theme-toggle"></div>
+            <i class="fas fa-moon text-xs" style="color: var(--page-text); transition: color 0.3s;"></i>
+        </div>
+        <button id="rtl-toggle" class="top-btn-text">RTL Mode</button>
+    </div>
+
+    <div class="main-wrapper">
+        <div class="login-card">
+
+            <div class="auth-logo">
+                <a href="index.html" class="flex items-center justify-center text-2xl lg:text-3xl font-black tracking-tighter" style="color: var(--accent-color); text-decoration: none;">
+                    VerdantSprouts
+                </a>
+            </div>
+
+            <div class="auth-header">
+                <h2>Create Account</h2>
+                <p>Join our farm-to-table subscription program.</p>
+            </div>
+
+            <form id="register-form">
+                <div class="form-group">
+                    <label for="fullname">Full Name</label>
+                    <div class="input-wrapper">
+                        <input type="text" id="fullname" class="input-field" placeholder="Jane Doe" required>
+                        <i class="fas fa-user input-icon"></i>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="email">Email Address</label>
+                    <div class="input-wrapper">
+                        <input type="email" id="email" class="input-field" placeholder="name@example.com" required>
+                        <i class="fas fa-envelope input-icon"></i>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <div class="input-wrapper">
+                        <input type="password" id="password" class="input-field password-field" placeholder="••••••••" required>
+                        <i class="fas fa-lock input-icon"></i>
+                        <button type="button" class="password-toggle" onclick="togglePassword('password', 'icon-pw')" tabindex="-1" aria-label="Toggle password visibility">
+                            <i class="fas fa-eye" id="icon-pw"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="confirm-password">Confirm Password</label>
+                    <div class="input-wrapper">
+                        <input type="password" id="confirm-password" class="input-field password-field" placeholder="••••••••" required>
+                        <i class="fas fa-check-circle input-icon"></i>
+                        <button type="button" class="password-toggle" onclick="togglePassword('confirm-password', 'icon-confirm')" tabindex="-1" aria-label="Toggle confirm password visibility">
+                            <i class="fas fa-eye" id="icon-confirm"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="utility-row">
+                    <label class="flex items-start cursor-pointer">
+                        <input type="checkbox" required class="mt-0.5">
+                        <span class="text-[0.7rem] font-medium leading-tight" style="color: var(--form-muted);">
+                            I agree to the <a href="#" class="font-bold hover:underline" style="color: var(--accent-color);">Terms of Service</a> and <a href="#" class="font-bold hover:underline" style="color: var(--accent-color);">Privacy Policy</a>.
+                        </span>
+                    </label>
+                </div>
+
+                <button type="submit" class="auth-btn">Register <i class="fas fa-arrow-right ml-2 btn-icon"></i></button>
+            </form>
+
+            <div class="divider"><span>Or authenticate with</span></div>
+
+            <div class="social-login">
+                <button class="social-btn" type="button" title="Sign up with Microsoft"><i class="fab fa-microsoft"></i></button>
+                <button class="social-btn" type="button" title="Sign up with Google"><i class="fab fa-google"></i></button>
+                <button class="social-btn" type="button" title="Sign up with Apple"><i class="fab fa-apple"></i></button>
+            </div>
+
+            <div class="login-link">
+                Already have an account? <a href="login.html">Sign In</a>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        // --- THEME LOGIC ---
+        const themeToggle = document.getElementById('theme-toggle');
+        const savedTheme = localStorage.getItem('theme') || 'light';
+        
+        if (savedTheme === 'dark') {
+            document.body.classList.add('dark-mode');
+            themeToggle.classList.add('active');
+        }
+
+        themeToggle.onclick = (e) => {
+            e.stopPropagation(); 
+            document.body.classList.toggle('dark-mode');
+            const isDark = document.body.classList.contains('dark-mode');
+            localStorage.setItem('theme', isDark ? 'dark' : 'light');
+            themeToggle.classList.toggle('active', isDark);
+        };
+
+        // --- RTL LOGIC ---
+        const rtlToggle = document.getElementById('rtl-toggle');
+        const savedDir = localStorage.getItem('dir') || 'ltr';
+        
+        if (savedDir === 'rtl') {
+            document.documentElement.dir = 'rtl';
+            rtlToggle.innerText = "LTR MODE";
+        }
+
+        rtlToggle.onclick = () => {
+            const isRTL = document.documentElement.dir === 'rtl';
+            document.documentElement.dir = isRTL ? 'ltr' : 'rtl';
+            localStorage.setItem('dir', isRTL ? 'ltr' : 'rtl');
+            rtlToggle.innerText = isRTL ? 'RTL MODE' : 'LTR MODE';
+        };
+
+        // --- PASSWORD TOGGLE LOGIC ---
+        function togglePassword(inputId, iconId) {
+            const input = document.getElementById(inputId);
+            const icon = document.getElementById(iconId);
+            const type = input.getAttribute('type') === 'password' ? 'text' : 'password';
+            
+            input.setAttribute('type', type);
+            icon.className = type === 'password' ? 'fas fa-eye' : 'fas fa-eye-slash';
+        }
+
+        // --- FORM SUBMISSION ---
+        document.getElementById('register-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('confirm-password').value;
+
+            if (password !== confirmPassword) {
+                alert('Passwords do not match. Please try again.');
+                return;
+            }
+
+            // Redirecting to the login page
+            window.location.href = 'login.html'; 
+        });
+
+        // Social Buttons Alert
+        document.querySelectorAll('.social-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                alert('SSO integration required for enterprise accounts.');
+            });
+        });
+    </script>
+</body>
+</html>
